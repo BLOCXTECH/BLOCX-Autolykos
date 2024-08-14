@@ -1,0 +1,33 @@
+# /etc/conf.d/blocx_testnetd: config file for /etc/init.d/blocx_testnetd
+
+# Config file location
+#BITCOIND_CONFIGFILE="/etc/blocx_testnetcore/blocx_testnet.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
+#BITCOIND_PIDDIR="/var/run/blocx_testnetd"
+
+# What filename to give the pidfile
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/blocx_testnetd.pid"
+
+# Where to write blocx_testnetd data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/blocx_testnetd"
+
+# User and group to own blocx_testnetd process
+#BITCOIND_USER="blocx_testnetcore"
+#BITCOIND_GROUP="blocx_testnetcore"
+
+# Path to blocx_testnetd executable
+#BITCOIND_BIN="/usr/bin/blocx_testnetd"
+
+# Nice value to run blocx_testnetd under
+#BITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#BITCOIND_OPTS=""
+
+# The timeout in seconds OpenRC will wait for blocx_testnetd to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+BITCOIND_SIGTERM_TIMEOUT=60

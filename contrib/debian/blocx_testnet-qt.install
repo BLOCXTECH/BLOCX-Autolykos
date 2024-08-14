@@ -1,0 +1,6 @@
+usr/local/bin/blocx_testnet-qt usr/bin
+share/pixmaps/blocx_testnet32.xpm usr/share/pixmaps
+share/pixmaps/blocx_testnet16.xpm usr/share/pixmaps
+share/pixmaps/blocx_testnet128.png usr/share/pixmaps
+debian/blocx_testnet-qt.desktop usr/share/applications
+debian/blocx_testnet-qt.protocol usr/share/kde4/services/

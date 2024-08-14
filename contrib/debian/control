@@ -1,0 +1,65 @@
+Source: blocx_testnet
+Section: utils
+Priority: optional
+Maintainer: Holger Schinzel <holger@blocx_testnet.org>
+Uploaders: Holger Schinzel <holger@blocx_testnet.org>
+Build-Depends: debhelper,
+ devscripts,
+ automake,
+ libtool,
+ bash-completion,
+ libdb4.8++-dev,
+ pkg-config,
+ libevent-dev,
+ libboost-filesystem1.48-dev | libboost-filesystem-dev (>> 1.47),
+ libboost-thread1.48-dev | libboost-thread-dev (>> 1.47),
+ libboost-test1.48-dev | libboost-test-dev (>> 1.47),
+ libminiupnpc8-dev | libminiupnpc-dev,
+ qt4-qmake, libqt4-dev,
+ qttools5-dev-tools, qttools5-dev,
+ libqrencode-dev,
+ python,
+ libzmq3-dev
+Standards-Version: 3.9.2
+Homepage: https://www.blocx_testnet.tech/
+Vcs-Git: git://github.com/BLOCX_TESTNETTECH/BLOCX_TESTNET.git
+Vcs-Browser: https://github.com/BLOCX_TESTNETTECH/BLOCX_TESTNET
+
+Package: blocx_testnetd
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: peer-to-peer network based digital currency - daemon
+ BLOCX_TESTNET is an experimental new digital currency that enables instant, private
+ payments to anyone, anywhere in the world. BLOCX_TESTNET uses peer-to-peer
+ technology to operate with no central authority: managing transactions
+ and issuing money are carried out collectively by the network. BLOCX_TESTNET Core
+ is the name of the open source software which enables the use of this currency.
+ .
+ This package provides the daemon, blocx_testnetd, and the CLI tool
+ blocx_testnet-cli to interact with the daemon.
+
+Package: blocx_testnet-qt
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: peer-to-peer network based digital currency - Qt GUI
+ BLOCX_TESTNET is an experimental new digital currency that enables instant, private
+ payments to anyone, anywhere in the world. BLOCX_TESTNET uses peer-to-peer
+ technology to operate with no central authority: managing transactions
+ and issuing money are carried out collectively by the network. BLOCX_TESTNET Core
+ is the name of the open source software which enables the use of this currency.
+ .
+ This package provides BLOCX_TESTNET-Qt, a GUI for BLOCX_TESTNET based on Qt.
+
+Package: blocx_testnet-tx
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: peer-to-peer digital currency - standalone transaction tool
+ BLOCX_TESTNET is an experimental new digital currency that enables instant, private
+ payments to anyone, anywhere in the world. BLOCX_TESTNET uses peer-to-peer
+ technology to operate with no central authority: managing transactions
+ and issuing money are carried out collectively by the network. BLOCX_TESTNET Core
+ is the name of the open source software which enables the use of this currency.
+ .
+ This package provides blocx_testnet-tx, a command-line transaction creation
+ tool which can be used without a blocx_testnet daemon.  Some means of
+ exchanging minimal transaction data with peers is still required.

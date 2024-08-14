@@ -1,0 +1,25 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="ar">locale/blocx_testnet_ar.qm</file>
+        <file alias="bg">locale/blocx_testnet_bg.qm</file>
+        <file alias="de">locale/blocx_testnet_de.qm</file>
+        <file alias="en">locale/blocx_testnet_en.qm</file>
+        <file alias="es">locale/blocx_testnet_es.qm</file>
+        <file alias="fi">locale/blocx_testnet_fi.qm</file>
+        <file alias="fr">locale/blocx_testnet_fr.qm</file>
+        <file alias="it">locale/blocx_testnet_it.qm</file>
+        <file alias="ja">locale/blocx_testnet_ja.qm</file>
+        <file alias="ko">locale/blocx_testnet_ko.qm</file>
+        <file alias="nl">locale/blocx_testnet_nl.qm</file>
+        <file alias="pl">locale/blocx_testnet_pl.qm</file>
+        <file alias="pt">locale/blocx_testnet_pt.qm</file>
+        <file alias="ro">locale/blocx_testnet_ro.qm</file>
+        <file alias="ru">locale/blocx_testnet_ru.qm</file>
+        <file alias="sk">locale/blocx_testnet_sk.qm</file>
+        <file alias="th">locale/blocx_testnet_th.qm</file>
+        <file alias="tr">locale/blocx_testnet_tr.qm</file>
+        <file alias="vi">locale/blocx_testnet_vi.qm</file>
+        <file alias="zh_CN">locale/blocx_testnet_zh_CN.qm</file>
+        <file alias="zh_TW">locale/blocx_testnet_zh_TW.qm</file>
+    </qresource>
+</RCC>

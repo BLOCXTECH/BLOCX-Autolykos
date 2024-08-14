@@ -1,0 +1,22 @@
+QT_TS = \
+  qt/locale/blocx_testnet_ar.ts \
+  qt/locale/blocx_testnet_bg.ts \
+  qt/locale/blocx_testnet_de.ts \
+  qt/locale/blocx_testnet_en.ts \
+  qt/locale/blocx_testnet_es.ts \
+  qt/locale/blocx_testnet_fi.ts \
+  qt/locale/blocx_testnet_fr.ts \
+  qt/locale/blocx_testnet_it.ts \
+  qt/locale/blocx_testnet_ja.ts \
+  qt/locale/blocx_testnet_ko.ts \
+  qt/locale/blocx_testnet_nl.ts \
+  qt/locale/blocx_testnet_pl.ts \
+  qt/locale/blocx_testnet_pt.ts \
+  qt/locale/blocx_testnet_ro.ts \
+  qt/locale/blocx_testnet_ru.ts \
+  qt/locale/blocx_testnet_sk.ts \
+  qt/locale/blocx_testnet_th.ts \
+  qt/locale/blocx_testnet_tr.ts \
+  qt/locale/blocx_testnet_vi.ts \
+  qt/locale/blocx_testnet_zh_CN.ts \
+  qt/locale/blocx_testnet_zh_TW.ts

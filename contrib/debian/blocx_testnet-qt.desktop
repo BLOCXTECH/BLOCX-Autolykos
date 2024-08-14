@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Name=BLOCX_TESTNET Core
+Comment=BLOCX_TESTNET P2P Cryptocurrency
+Comment[de]=Verbinde mit dem BLOCX_TESTNET peer-to-peer Netzwerk
+Comment[fr]=BLOCX_TESTNET, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=BLOCX_TESTNET, eşten eşe kriptografik sanal para birimi
+Exec=blocx_testnet-qt %u
+Terminal=false
+Type=Application
+Icon=blocx_testnet128
+MimeType=x-scheme-handler/blocx_testnet;
+Categories=Office;Finance;P2P;Network;Qt;
+StartupWMClass=BLOCX_TESTNET-qt

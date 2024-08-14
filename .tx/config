@@ -1,0 +1,7 @@
+[main]
+host = https://www.transifex.com
+
+[blocx_testnet.qt-translation-018x]
+file_filter = src/qt/locale/blocx_testnet_<lang>.ts
+source_file = src/qt/locale/blocx_testnet_en.xlf
+source_lang = en
