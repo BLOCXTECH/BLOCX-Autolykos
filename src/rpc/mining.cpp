@@ -1024,8 +1024,8 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     if (node.connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
         throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, PACKAGE_NAME " is not connected!");
 
-    if (::ChainstateActive().IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, PACKAGE_NAME " is in initial sync and waiting for blocks...");
+    // if (::ChainstateActive().IsInitialBlockDownload())
+    //     throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, PACKAGE_NAME " is in initial sync and waiting for blocks...");
 
     // next bock is a superblock and we need governance info to correctly construct it
     if (AreSuperblocksEnabled(*sporkManager) && !::masternodeSync->IsSynced() && CSuperblock::IsValidBlockHeight(::ChainActive().Height() + 1))
