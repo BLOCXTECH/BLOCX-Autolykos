@@ -31,7 +31,7 @@ uint256 CBlockHeader::AutolykosHash() const
 {
     //Version version = nVersion;
     Version version = 0x05;
-    //LogPrintf("1111111 %d", version);
+
 
     int k = 32;
     int n = 26;
@@ -42,8 +42,9 @@ uint256 CBlockHeader::AutolykosHash() const
 
     Timestamp timestamp = nTime;
     uint32_t nBits = nBits;
+    int a_Height = aHeight;
 
-    std::vector<uint8_t> nonce = powScheme.uint32ToBytes(nNonce);
+    std::vector<uint8_t> nonce = powScheme.uint32ToBytes(nNewNonce);
     ModifierId parentId = powScheme.hexToBytesModifierId(prevHash);
     Digest32 transactionsRoot = powScheme.hexToArrayDigest32(merkleRoot);
 
@@ -67,7 +68,7 @@ uint256 CBlockHeader::AutolykosHash() const
         transactionsRoot,
         timestamp,
         nBits,
-        9999999,
+        a_Height,
         extensionRoot,
         powSolution,
         votes);
@@ -85,12 +86,12 @@ uint256 CBlockHeader::AutolykosHash() const
 std::string CBlock::ToString() const
 {
     std::stringstream s;
-    s << strprintf("CBlock(hash=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, aHeight=%d, vtx=%u)\n",
+    s << strprintf("CBlock(hash=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, nNewNonce=%d, aHeight=%d, vtx=%u)\n",
                    GetHash().ToString(),
                    nVersion,
                    hashPrevBlock.ToString(),
                    hashMerkleRoot.ToString(),
-                   nTime, nBits, nNonce, 9999999,
+                   nTime, nBits, nNonce, nNewNonce, aHeight,
                    vtx.size());
     for (const auto& tx : vtx) {
         s << "  " << tx->ToString() << "\n";

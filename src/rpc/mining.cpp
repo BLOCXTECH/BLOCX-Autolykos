@@ -258,6 +258,7 @@ HeaderWithoutPow ConvertBlockToHeader(CBlock* block) {
 
     Timestamp timestamp = block->nTime;
     uint32_t nBits = block->nBits;
+    int8_t a_Height = block->aHeight;
 
     int k = 32;
     int n = 26;
@@ -274,7 +275,7 @@ HeaderWithoutPow ConvertBlockToHeader(CBlock* block) {
     std::array<uint8_t, 3> votes = {0x00, 0x00, 0x00};
 
     HeaderWithoutPow h(version, parentId, ADProofsRoot, stateRoot, transactionsRoot, timestamp,
-                       nBits, 9999999, extensionRoot, votes);
+                       nBits, a_Height, extensionRoot, votes);
 
     return h;
 }
@@ -344,7 +345,7 @@ static bool GenerateBlock(ChainstateManager& chainman, CBlock& block, uint64_t& 
             auto head = powScheme.prove(
                 noHeader,
                 parentId,
-                9999999,
+                height,
                 b_version,
                 block.nBits,
                 stateRoot,
@@ -366,7 +367,7 @@ static bool GenerateBlock(ChainstateManager& chainman, CBlock& block, uint64_t& 
                     auto hash_Header = HeaderToBytes.serializedId(*head);
                     // uint256 headers = uint256(hash_Header);
     
-                    block.nNonce = vectorToUint32(*head);
+                    block.nNewNonce = vectorToUint32(*head);
                     std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(block);
                     // std::cout << block.nBits << "--------- " << encodeCompactBits(block.nBits) << std::endl;
                     if (!chainman.ProcessNewBlock(chainparams, shared_pblock, true, nullptr)) {
@@ -380,6 +381,9 @@ static bool GenerateBlock(ChainstateManager& chainman, CBlock& block, uint64_t& 
             minNonce = maxNonce;
             maxNonce += 100000;
             --max_tries;
+            if (ShutdownRequested()) {
+                return false;
+            }
             LogPrintf(">>>>>>>>>>>> NOT FOUND %d\n\n\n", max_tries);
         }
         return false;
@@ -739,7 +743,7 @@ static UniValue getcandidate(const JSONRPCRequest& request)
     AutolykosPowScheme powScheme(k, n);
 
     HeaderWithoutPow h = ConvertBlockToHeader(pblock);
-    h.height = 9999999;
+    //h.height = 9999999;
 
     printHeaderWithoutPOW(h);
 
@@ -750,7 +754,7 @@ static UniValue getcandidate(const JSONRPCRequest& request)
     LogPrintf("candidate msg : %s\n", hexString);
 
     obj.pushKV("msg", hexString);
-    obj.pushKV("h", h.height);
+    obj.pushKV("h", (int)pblock->aHeight);
     obj.pushKV("pk", "0x02eeec374f4e660e117fccbfec79e6fe5cdf44ac508fa228bfc654d2973f9bdc9a");
 
     return obj;
@@ -773,7 +777,7 @@ static UniValue submitsolution(const JSONRPCRequest& request)
 
     AutolykosPowScheme powScheme(32, 26);
 
-    std::vector<uint8_t> nonce = powScheme.uint32ToBytes(block.nNonce);
+    std::vector<uint8_t> nonce = powScheme.uint32ToBytes(block.nNewNonce);
 
     AutolykosSolution powSolution = {
         groupElemFromBytes({0x02, 0xf5, 0x92, 0x4b, 0x14, 0x32, 0x5a, 0x1f, 0xfa, 0x8f, 0x95, 0xf8, 0xc0, 0x00, 0x06, 0x11, 0x87, 0x28, 0xce, 0x37, 0x85, 0xa6, 0x48, 0xe8, 0xb2, 0x69, 0x82, 0x0a, 0x3d, 0x3b, 0xdf, 0xd4, 0x0d}),
@@ -1106,6 +1110,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     // Update nTime
     UpdateTime(pblock, consensusParams, pindexPrev);
     pblock->nNonce = 0;
+    pblock->nNewNonce = 0;
 
     UniValue aCaps(UniValue::VARR);
     aCaps.push_back("proposal");
@@ -1338,8 +1343,8 @@ static UniValue submitblock(const JSONRPCRequest& request)
     }
 
     uint256 hash = block.GetHash();
-    uint256 hash1 = block.AutolykosHash();
-    LogPrintf("HASH IS :::::::: %s\n\n", hash1.ToString());
+    //uint256 hash1 = block.AutolykosHash();
+    //LogPrintf("HASH IS :::::::: %s\n\n", hash1.ToString());
 
     {
         LOCK(cs_main);

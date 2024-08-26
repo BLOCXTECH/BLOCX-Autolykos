@@ -30,6 +30,8 @@ public:
     uint32_t nTime;
     uint32_t nBits;
     uint32_t nNonce;
+    uint64_t nNewNonce;
+    uint32_t aHeight;
 
     CBlockHeader()
     {
@@ -38,6 +40,10 @@ public:
     // ??????????????????????????????????????????
     SERIALIZE_METHODS(CBlockHeader, obj) {
         READWRITE(obj.nVersion, obj.hashPrevBlock, obj.hashMerkleRoot, obj.nTime, obj.nBits, obj.nNonce);
+        if(obj.nVersion == 0x05) {
+            READWRITE(obj.nNewNonce);
+            READWRITE(obj.aHeight);
+        } 
     }
 
     void SetNull()
@@ -48,6 +54,8 @@ public:
         nTime = 0;
         nBits = 0;
         nNonce = 0;
+        nNewNonce = 0;
+        aHeight = 0;
     }
 
     bool IsNull() const
@@ -184,6 +192,10 @@ struct CompressibleBlockHeader : CBlockHeader {
             READWRITE(obj.nBits);
         }
         READWRITE(obj.nNonce);
+        if(obj.nVersion == 0x05) {
+            READWRITE(obj.nNewNonce);
+            READWRITE(obj.aHeight);
+        }
     }
 
     void Compress(const std::vector<CompressibleBlockHeader>& previous_blocks, std::list<int32_t>& last_unique_versions);
@@ -233,6 +245,10 @@ public:
         block.nTime = nTime;
         block.nBits = nBits;
         block.nNonce = nNonce;
+        if(block.nVersion == 0x05) {
+            block.nNewNonce = nNewNonce;
+            block.aHeight = aHeight;
+        }
         return block;
     }
 

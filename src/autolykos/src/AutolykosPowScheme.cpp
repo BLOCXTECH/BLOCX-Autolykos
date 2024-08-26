@@ -27,7 +27,21 @@ AutolykosPowScheme::AutolykosPowScheme(int k, int n) {
   * @return - N value
   */
 int AutolykosPowScheme::calcN(int version, int headerHeight) const {
-    return NBase;
+    if (version == HeaderInitialVersion) {
+        return NBase;
+    } else {
+        int height = std::min(NIncreasementHeightMax, headerHeight);
+        if (height < IncreaseStart) {
+            return NBase;
+        } else {
+            int itersNumber = (height - IncreaseStart) / IncreasePeriodForN + 1;
+            int result = NBase;
+            for (int i = 0; i < itersNumber; ++i) {
+                result = result / 100 * 105;
+            }
+            return result;
+        }
+    }
 }
 
 int AutolykosPowScheme::calcN(const HeaderWithoutPow& header) const {

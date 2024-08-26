@@ -308,6 +308,7 @@ bool CheckProofOfWork(const CBlockHeader& b_h, uint256 hash, unsigned int nBits,
     int n = 26;
     AutolykosPowScheme powScheme(k, n);
 
+    int height = b_h.aHeight;
     Version version = 0x05;
     //Version version = b_h.nVersion;
 
@@ -315,7 +316,7 @@ bool CheckProofOfWork(const CBlockHeader& b_h, uint256 hash, unsigned int nBits,
     std::string merkleRoot = b_h.hashMerkleRoot.ToString();
 
     Timestamp timestamp = b_h.nTime;
-    std::vector<uint8_t> nonce = powScheme.uint32ToBytes(b_h.nNonce);
+    std::vector<uint8_t> nonce = powScheme.uint32ToBytes(b_h.nNewNonce);
     ModifierId parentId = powScheme.hexToBytesModifierId(prevHash);
     Digest32 transactionsRoot = powScheme.hexToArrayDigest32(merkleRoot);
 
@@ -339,7 +340,7 @@ bool CheckProofOfWork(const CBlockHeader& b_h, uint256 hash, unsigned int nBits,
         transactionsRoot,
         timestamp,
         nBits,
-        9999999,
+        height,
         extensionRoot,
         powSolution,
         votes
