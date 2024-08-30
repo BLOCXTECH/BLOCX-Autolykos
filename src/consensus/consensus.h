@@ -6,6 +6,8 @@
 #ifndef BITCOIN_CONSENSUS_CONSENSUS_H
 #define BITCOIN_CONSENSUS_CONSENSUS_H
 
+#include <consensus/params.h>
+
 /** The maximum allowed size for a serialized block, in bytes (network rule) */
 static const unsigned int MAX_LEGACY_BLOCK_SIZE = 1000000;
 static const unsigned int MAX_DIP0001_BLOCK_SIZE = 2000000;
@@ -22,6 +24,16 @@ inline unsigned int MaxBlockSigOps(bool fDIP0001Active = true)
 static const unsigned int MAX_TX_EXTRA_PAYLOAD = 10000;
 /** Coinbase transaction outputs can only be spent after this number of new blocks (network rule) */
 static const int COINBASE_MATURITY = 4;
+static const int COINBASE_MATURITY_V2 = 15;
+
+static const int GetCurrentCoinBaseMaturity(const int& nHeight)
+{
+    if (nHeight <= 283000) {
+        return COINBASE_MATURITY;
+    } else {
+        return COINBASE_MATURITY_V2;
+    }
+}
 
 /** Flags for nSequence and nLockTime locks */
 /** Interpret sequence numbers as relative lock-time constraints. */

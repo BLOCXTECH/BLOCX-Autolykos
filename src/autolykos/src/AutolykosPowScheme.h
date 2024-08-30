@@ -140,6 +140,14 @@ public:
         return static_cast<unsigned int>(value.convert_to<unsigned long long>());
     }
 
+    std::string vectorToHex(const std::vector<uint8_t>& vec) {
+        std::ostringstream oss;
+        for (auto byte : vec) {
+            oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
+        }
+        return oss.str();
+    }
+
 
 private:
     int HeaderInitialVersion = 1;

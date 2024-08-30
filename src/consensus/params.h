@@ -111,6 +111,7 @@ struct Params {
     int64_t nPowTargetTimespan;
     int64_t nNewPowTargetSpacing;
     int64_t nNewPowTargetSpacingForkHeight;
+    int64_t nAutolykosPowTargetSpacing;
     int nPowKGWHeight;
     int nPowDGWHeight;
     int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
@@ -127,7 +128,9 @@ struct Params {
 
     int64_t GetCurrentPowTargetSpacing(const int& nHeight) const
     {
-        if (nHeight > nNewPowTargetSpacingForkHeight)
+        if (nHeight > AutolykosForkHeight)
+            return nAutolykosPowTargetSpacing;
+        else if (nHeight > nNewPowTargetSpacingForkHeight && nHeight <= AutolykosForkHeight)
             return nNewPowTargetSpacing;
         else
             return nPowTargetSpacing;

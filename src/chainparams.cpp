@@ -166,13 +166,14 @@ public:
         consensus.DIP0003EnforcementHash = uint256S("0x");
         consensus.DIP0008Height = 2;
         consensus.BRRHeight = 12096;
-        consensus.AutolykosForkHeight = 264783;
+        consensus.AutolykosForkHeight = 283000
         consensus.MinBIP9WarningHeight = 99999999; // V19 activation height + miner confirmation window
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
         consensus.nPowTargetTimespan = 9 * 60; // BLOCX_TESTNET: 1 day
         consensus.nPowTargetSpacing = 3 * 60; // BLOCX_TESTNET: 3 minutes
         consensus.nNewPowTargetSpacing = 90; // BLOCX_TESTNET: 1.5 minutes
         consensus.nNewPowTargetSpacingForkHeight = 87600;
+        consensus.nAutolykosPowTargetSpacing = 60; // BLOCX_TESTNET: 1 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nPowKGWHeight = 1;

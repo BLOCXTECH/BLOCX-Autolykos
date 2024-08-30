@@ -1,4 +1,5 @@
 #include "includes.h"
+#include "hash.h"
 
 using namespace boost::multiprecision;
 
@@ -47,12 +48,44 @@ int AutolykosPowScheme::calcN(int version, int headerHeight) const {
 int AutolykosPowScheme::calcN(const HeaderWithoutPow& header) const {
     return calcN(header.version, header.height);
 }
+
+std::string toHex(const std::vector<uint8_t>& data) {
+    std::stringstream ss;
+    ss << std::hex << std::setfill('0');  // Set the format for hexadecimal output
+
+    for (auto byte : data) {
+        ss << std::setw(2) << static_cast<int>(byte);  // Format each byte as two hex digits
+    }
+
+    return ss.str();
+}
      
 /**
   * Header digest ("message" for default GPU miners) a miner is working on
   */
 std::vector<uint8_t> AutolykosPowScheme::msgByHeader(const HeaderWithoutPow& h) {
-    return Blake2b256(HeaderSerializer::bytesWithoutPow(h));
+    std::stringstream ss;
+    ss << std::hex << std::setfill('0');
+    auto data = HeaderSerializer::bytesWithoutPow(h);
+    for (const auto& byte : data) {
+        ss << std::setw(2) << static_cast<int>(byte);
+    }
+    std::cout << ss.str() << std::endl;
+    // std::cout << "SHA256 : " << SerializeHash(ss.str()).ToString() << std::endl;
+    auto computedMsg = computeBlake2bHash(ss.str());
+    // std::cout << "NEW OUT " << toHex(abc) << std::endl;
+    return computedMsg; 
+    // {
+    //     std::cout << "Blake2b256" << std::endl;
+    //     std::stringstream ss;
+    //     ss << std::hex << std::setfill('0');
+    //     auto data = Blake2b256(HeaderSerializer::bytesWithoutPow(h));
+    //     for (const auto& byte : data) {
+    //         ss << std::setw(2) << static_cast<int>(byte);
+    //     }
+    //     std::cout << ss.str() << std::endl;
+    // }
+    // return Blake2b256(HeaderSerializer::bytesWithoutPow(h));
 }
 
 /**
@@ -215,9 +248,7 @@ std::optional<AutolykosSolution> AutolykosPowScheme::checkNonces(int version,
                 d = toBigInt(hash(asUnsignedByteArray(sum)));
             // }
 
-            // LogPrintf("Nonce=%d %d => d=%d <= b=%d \n", i, d <= b, d, b);
             if (d <= b) {
-                LogPrintf("Solution found \n");
                 std::cout << "Solution found at " << i << std::endl;
                 return AutolykosSolution{genPk(sk), genPk(x), nonce, d};
             }
@@ -353,6 +384,9 @@ boost::multiprecision::cpp_int AutolykosPowScheme::hitForVersion2(const Header& 
     std::vector<uint8_t> msg = msgByHeader(headerWithoutPow);
     std::vector<uint8_t> nonce = header.powSolution.n;
 
+    std::string hexString = vectorToHex(msg);
+    std::cout << "hitForVersion2 msg " << hexString << std::endl;
+
     std::vector<uint8_t> h(4); // used in AL v.2 only
     h[0] = (header.height >> 24) & 0xFF;
     h[1] = (header.height >> 16) & 0xFF;
@@ -395,6 +429,11 @@ bool AutolykosPowScheme::validate(const Header& header)
 {
     boost::multiprecision::cpp_int b = getB(header.nBits);
     boost::multiprecision::cpp_int hit = hitForVersion2(header);
+
+    std::stringstream ss;
+    ss << std::hex << hit;
+    std::string hexStr = ss.str();
+    std::cout << "HIT : ------------ " << hexStr << std::endl;
     if (hit >= b) {
         return false;
     }

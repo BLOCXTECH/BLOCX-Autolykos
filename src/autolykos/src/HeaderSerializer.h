@@ -2,6 +2,7 @@
 #define HEADERSERIALIZER_H
 
 #include "includes.h"
+#include "serialize.h"
 
 class HeaderSerializer {
 public:

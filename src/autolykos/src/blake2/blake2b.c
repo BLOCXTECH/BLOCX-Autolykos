@@ -180,3 +180,9 @@ std::vector<uint8_t> Blake2b256(const std::vector<uint8_t>& data) {
     blake2b(hash, BLAKE2B_OUTBYTES, NULL, 0, data.data(), data.size());
     return std::vector<uint8_t>(hash, hash + BLAKE2B_OUTBYTES);
 }
+
+std::vector<uint8_t> computeBlake2bHash(const std::string& input) {
+    uint8_t hash[BLAKE2B_OUTBYTES];
+    blake2b(hash, BLAKE2B_OUTBYTES, NULL, 0, input.data(), input.size());
+    return std::vector<uint8_t>(hash, hash + BLAKE2B_OUTBYTES);
+}

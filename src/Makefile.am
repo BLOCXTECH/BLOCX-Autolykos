@@ -675,6 +675,7 @@ libbitcoin_consensus_a_SOURCES = \
   autolykos/src/HeaderSerializer.cpp \
   autolykos/src/HeaderSerializer.h \
   autolykos/src/HeaderWithoutPow.h \
+  autolykos/src/HSerializer.h \
   autolykos/src/mining.cpp \
   autolykos/src/mining.h \
   autolykos/src/NumericHash.cpp \

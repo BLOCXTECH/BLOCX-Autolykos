@@ -1032,15 +1032,23 @@ bool isExtraFundAllocationHeight(int nHeight) {
             return true;
         } else if (nHeight == 220000) {
             return true;
-        } else if (nHeight == 400000) {
+        } else if (nHeight == 285000) {
             return true;
-        } else if (nHeight == 575000) {
+        } else if (nHeight == 370000) {
             return true;
-        } else if (nHeight == 750000) {
+        } else if (nHeight == 460000) {
             return true;
-        } else if (nHeight == 925000) {
+        } else if (nHeight == 545000) {
             return true;
-        } else if (nHeight == 1100000) {
+        } else if (nHeight == 630000) {
+            return true;
+        } else if (nHeight == 715000) {
+            return true;
+        } else if (nHeight == 885000) {
+            return true;
+        } else if (nHeight == 1060000) {
+            return true;
+        } else if (nHeight == 1230000) {
             return true;
         } else {
             return false;
@@ -1077,15 +1085,23 @@ CAmount GetExtraPayOutAmount(int nHeight) {
         ExtraPayOutAmount = 300000;
     } else if (nHeight == 220000) {
         ExtraPayOutAmount = 1000000;
-    } else if (nHeight == 400000) {
+    } else if (nHeight == 285000) {
+        ExtraPayOutAmount = 1500000;
+    } else if (nHeight == 370000) {
+        ExtraPayOutAmount = 1500000;
+    } else if (nHeight == 460000) {
+        ExtraPayOutAmount = 1500000;
+    } else if (nHeight == 545000) {
         ExtraPayOutAmount = 1000000;
-    } else if (nHeight == 575000) {
+    } else if (nHeight == 630000) {
         ExtraPayOutAmount = 1000000;
-    } else if (nHeight == 750000) {
+    } else if (nHeight == 715000) {
         ExtraPayOutAmount = 1000000;
-    } else if (nHeight == 925000) {
+    } else if (nHeight == 885000) {
         ExtraPayOutAmount = 1000000;
-    } else if (nHeight == 1100000) {
+    } else if (nHeight == 1060000) {
+        ExtraPayOutAmount = 1000000;
+    } else if (nHeight == 1230000) {
         ExtraPayOutAmount = 1000000;
     } else {
         ExtraPayOutAmount = 0;
@@ -1104,71 +1120,93 @@ CAmount GetBlockSubsidy(int nPrevHeight, const Consensus::Params& consensusParam
     CAmount nSubsidyBase;
 
     if (nPrevHeight == 0) {
-        nSubsidyBase = 3000000;
+        nSubsidyBase = 3000000 * COIN;
     } else if (nPrevHeight <= 6000 ) {
-        nSubsidyBase = 2000;
+        nSubsidyBase = 2000 * COIN;
     } else if (nPrevHeight <= 14000) {
-        nSubsidyBase = 1000;
+        nSubsidyBase = 1000 * COIN;
     } else if (nPrevHeight <= 24000) {
-        nSubsidyBase = 800;
+        nSubsidyBase = 800 * COIN;
     } else if (nPrevHeight <= 44000) {
-        nSubsidyBase = 600;
+        nSubsidyBase = 600 * COIN;
     } else if (nPrevHeight <= 74000) {
-        nSubsidyBase = 400;
+        nSubsidyBase = 400 * COIN;
     } else if (nPrevHeight <= 87500) {
-        nSubsidyBase = 300;
+        nSubsidyBase = 300 * COIN;
     } else if (nPrevHeight <= 172000) {
-        nSubsidyBase = 150;
-    } else if (nPrevHeight <= 316000) {
-        nSubsidyBase = 120;
-    } else if (nPrevHeight <= 460000) {
-        nSubsidyBase = 100;
-    } else if (nPrevHeight <= 604000) {
-        nSubsidyBase = 80;
-    } else if (nPrevHeight <= 748000) {
-        nSubsidyBase = 65;
-    } else if (nPrevHeight <= 892000) {
-        nSubsidyBase = 50;
-    } else if (nPrevHeight <= 1036000) {
-        nSubsidyBase = 40;
-    } else if (nPrevHeight <= 1180000) {
-        nSubsidyBase = 30;
-    } else if (nPrevHeight <= 1324000) {
-        nSubsidyBase = 25;
-    } else if (nPrevHeight <= 1468000) {
-        nSubsidyBase = 20;
-    } else if (nPrevHeight <= 1612000) {
-        nSubsidyBase = 15;
-    } else if (nPrevHeight <= 1756000) {
-        nSubsidyBase = 12;
-    } else if (nPrevHeight <= 1900000) {
-        nSubsidyBase = 10;
-    } else if (nPrevHeight <= 2044000) {
-        nSubsidyBase = 9;
-    } else if (nPrevHeight <= 2188000) {
-        nSubsidyBase = 8;
-    } else if (nPrevHeight <= 2332000) {
-        nSubsidyBase = 7;
-    } else if (nPrevHeight <= 2476000) {
-        nSubsidyBase = 6;
-    } else if (nPrevHeight <= 2620000) {
-        nSubsidyBase = 5;
-    } else if (nPrevHeight <= 2764000) {
-        nSubsidyBase = 4;
-    } else if (nPrevHeight <= 2908000) {
-        nSubsidyBase = 3;
-    } else if (nPrevHeight <= 3052000) {
-        nSubsidyBase = 2;
-    } else if (nPrevHeight <= 3196000) {
-        nSubsidyBase = 1;
-    } else if (nPrevHeight <= 3340000) {
-        nSubsidyBase = 0.5;
-    } else if (nPrevHeight <= 3648000) {
-        nSubsidyBase = 0.25;
+        nSubsidyBase = 150 * COIN;
+    } else if (nPrevHeight <= 283000) {
+        nSubsidyBase = 120 * COIN;
+    } else if (nPrevHeight <= 330000) {
+        nSubsidyBase = 80 * COIN;
+    } else if (nPrevHeight <= 492000) {
+        nSubsidyBase = 64 * COIN;
+    } else if (nPrevHeight <= 654000) {
+        nSubsidyBase = 52 * COIN;
+    } else if (nPrevHeight <= 816000) {
+        nSubsidyBase = 42 * COIN;
+    } else if (nPrevHeight <= 978000) {
+        nSubsidyBase = 34 * COIN;
+    } else if (nPrevHeight <= 1140000) {
+        nSubsidyBase = 26 * COIN;
+    } else if (nPrevHeight <= 1302000) {
+        nSubsidyBase = 22 * COIN;
+    } else if (nPrevHeight <= 1464000) {
+        nSubsidyBase = 20 * COIN;
+    } else if (nPrevHeight <= 1626000) {
+        nSubsidyBase = 18 * COIN;
+    } else if (nPrevHeight <= 1788000) {
+        nSubsidyBase = 15 * COIN;
+    } else if (nPrevHeight <= 1950000) {
+        nSubsidyBase = 14 * COIN;
+    } else if (nPrevHeight <= 2112000) {
+        nSubsidyBase = 13 * COIN;
+    } else if (nPrevHeight <= 2274000) {
+        nSubsidyBase = 12 * COIN;
+    } else if (nPrevHeight <= 2436000) {
+        nSubsidyBase = 11 * COIN;
+    } else if (nPrevHeight <= 2598000) {
+        nSubsidyBase = 10 * COIN;
+    } else if (nPrevHeight <= 2760000) {
+        nSubsidyBase = 9 * COIN;
+    } else if (nPrevHeight <= 2922000) {
+        nSubsidyBase = 8 * COIN;
+    } else if (nPrevHeight <= 3084000) {
+        nSubsidyBase = 7 * COIN;
+    } else if (nPrevHeight <= 3246000) {
+        nSubsidyBase = 6 * COIN;
+    } else if (nPrevHeight <= 3408000) {
+        nSubsidyBase = 5 * COIN;
+    } else if (nPrevHeight <= 3570000) {
+        nSubsidyBase = 4 * COIN;
+    } else if (nPrevHeight <= 3732000) {
+        nSubsidyBase = 3 * COIN;
+    } else if (nPrevHeight <= 3894000) {
+        nSubsidyBase = 2 * COIN;
+    } else if (nPrevHeight <= 4056000) {
+        nSubsidyBase = 1 * COIN;
+    } else if (nPrevHeight <= 4218000) {
+        nSubsidyBase = 0.9 * COIN;
+    } else if (nPrevHeight <= 4380000) {
+        nSubsidyBase = 0.8 * COIN;
+    } else if (nPrevHeight <= 4542000) {
+        nSubsidyBase = 0.7 * COIN;
+    } else if (nPrevHeight <= 4704000) {
+        nSubsidyBase = 0.6 * COIN;
+    } else if (nPrevHeight <= 4866000) {
+        nSubsidyBase = 0.5 * COIN;
+    } else if (nPrevHeight <= 5028000) {
+        nSubsidyBase = 0.4 * COIN;
+    } else if (nPrevHeight <= 5190000) {
+        nSubsidyBase = 0.3 * COIN;
+    } else if (nPrevHeight <= 5352000) {
+        nSubsidyBase = 0.2 * COIN;
+    } else if (nPrevHeight <= 5514000) {
+        nSubsidyBase = 0.1 * COIN;
     } else {
-	    nSubsidyBase = 0;
+        nSubsidyBase = 0 * COIN;
     }
-    CAmount nSubsidy = nSubsidyBase * COIN;
+    CAmount nSubsidy = nSubsidyBase;
     // this is only active on devnets
     if (nPrevHeight < consensusParams.nHighSubsidyBlocks) {
         nSubsidy *= consensusParams.nHighSubsidyFactor;
@@ -4053,8 +4091,10 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
             devPayoutValue = (GetBlockSubsidy(nHeight + 1, consensusParams) * consensusParams.DevelopementFundShare) / 100;
         } else if (nHeight == 87500) {
             devPayoutValue = 837000000;
+        } else if (nHeight < Params().GetConsensus().AutolykosForkHeight) {
+            devPayoutValue = (GetBlockSubsidy(nHeight + 1, consensusParams) * (300.0 / 95.0)) / 100;
         } else {
-            devPayoutValue = (GetBlockSubsidy(nHeight + 1, consensusParams) * (300.0/95.0)) / 100;
+            devPayoutValue = (GetBlockSubsidy(nHeight, consensusParams) * (300.0 / 95.0)) / 100;
         }
 
         bool found = false;

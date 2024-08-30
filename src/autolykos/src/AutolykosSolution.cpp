@@ -17,7 +17,7 @@ void AutolykosV1SolutionSerializer::serialize(const AutolykosSolution& obj, Writ
 }
 
 void AutolykosV2SolutionSerializer::serialize(const AutolykosSolution& obj, Writer& w) {
-    w.putBytes(groupElemToBytes(obj.pk));
+    // w.putBytes(groupElemToBytes(obj.pk));
     assert(obj.n.size() == 8); // non-consensus check on prover side
     w.putBytes(obj.n);
 }

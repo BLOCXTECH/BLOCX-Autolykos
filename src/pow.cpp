@@ -77,8 +77,10 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const Conse
         EventHorizonDeviationSlow = 1 / EventHorizonDeviation;
 
         if (PastBlocksMass >= PastBlocksMin) {
-                if ((PastRateAdjustmentRatio <= EventHorizonDeviationSlow) || (PastRateAdjustmentRatio >= EventHorizonDeviationFast))
-                { assert(BlockReading); break; }
+            if ((PastRateAdjustmentRatio <= EventHorizonDeviationSlow) || (PastRateAdjustmentRatio >= EventHorizonDeviationFast)) {
+                assert(BlockReading);
+                break;
+            }
         }
         if (BlockReading->pprev == nullptr) { assert(BlockReading); break; }
         BlockReading = BlockReading->pprev;
@@ -113,7 +115,7 @@ unsigned int static DarkGravityWave(const CBlockIndex* pindexLast, const Consens
         return bnPowLimit.GetCompact();
     }
 
-    if (pindexLast->nHeight <= params.AutolykosForkHeight + 5) {
+    if (pindexLast->nHeight == params.AutolykosForkHeight) {
         return encodeCompactBits(0xa);
     }
 
@@ -162,10 +164,9 @@ unsigned int static DarkGravityWave(const CBlockIndex* pindexLast, const Consens
         bnNew = bnPowLimit;
     }
 
-    if (pindexLast->nVersion >= 5 || pindexLast->nHeight + 1 >= params.AutolykosForkHeight) {
+    if (pindexLast->nVersion == 5 || pindexLast->nHeight + 1 >= params.AutolykosForkHeight) {
         boost::multiprecision::cpp_int values = decodeCompactBits(
-            encodeCompactBits(bnNew.GetCompact())
-        );
+            encodeCompactBits(bnNew.GetCompact()));
         unsigned int abc = cpp_int_to_unsigned_int(values);
         return abc;
     }

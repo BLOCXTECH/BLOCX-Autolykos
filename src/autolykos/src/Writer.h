@@ -13,7 +13,15 @@ public:
     void putULong(uint64_t value);
     void putUInt(uint32_t value);
     void putUByte(uint8_t value);
+    void write(const char* data, size_t size) {
+        buffer.insert(buffer.end(), data, data + size);
+    }
 
+    template <typename T>
+    void write(const T& value) {
+        write(reinterpret_cast<const char*>(&value), sizeof(T));
+    }
+    
     std::vector<uint8_t> result() const;
 };
 

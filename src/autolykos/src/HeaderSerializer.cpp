@@ -1,22 +1,28 @@
 #include "includes.h"
+#include "uint256.h"
+#include "HSerializer.h"
+
+uint256 reverseUint256(const uint256& value) {
+    uint256 reversed_value = value;
+    std::reverse(reversed_value.begin(), reversed_value.end());
+    return reversed_value;
+}
 
 void HeaderSerializer::serializeWithoutPow(const HeaderWithoutPow& h, Writer& w) {
-    w.put(h.version);
-    w.putBytes(idToBytes(h.parentId));
-    w.putBytes(h.ADProofsRoot.data(), h.ADProofsRoot.size());
-    w.putBytes(h.transactionsRoot.data(), h.transactionsRoot.size());
-    w.putBytes(h.stateRoot.data(), h.stateRoot.size());
-    w.putULong(h.timestamp);
-    w.putBytes(h.extensionRoot.data(), h.extensionRoot.size());
-    serialize(h.nBits, w); //DifficultySerializer
-    w.putUInt(h.height);
-    w.putBytes(h.votes.data(), h.votes.size());
+    int32_t nVersion{0};
+    uint256 previousHash(h.parentId);
+    uint256 hashMerkleRoot;
+    uint32_t nTime{0};
+    uint32_t nBits{0};
+    uint32_t aHeight{0};
 
-    // For block version >= 2, this new byte encodes length of possible new fields.
-    // Set to 0 for now, so no new fields.
-    if (h.version > Header::InitialVersion) {
-        w.putUByte(0);
-    }
+    nVersion = static_cast<int32_t>(h.version);
+    std::memcpy(&hashMerkleRoot, h.transactionsRoot.data(), h.transactionsRoot.size());
+    nTime = static_cast<uint32_t>(h.timestamp);
+    nBits = h.nBits;
+
+    HSerializer hserializer(nVersion, reverseUint256(previousHash), reverseUint256(hashMerkleRoot), nTime, nBits, h.height);
+    hserializer.Serialize(w);
 }
 
 std::vector<uint8_t> HeaderSerializer::bytesWithoutPow(const HeaderWithoutPow& header) {

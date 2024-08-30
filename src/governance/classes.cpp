@@ -506,54 +506,68 @@ CAmount CSuperblock::GetPaymentsLimit(int nBlockHeight)
     CAmount nSuperblockPartOfSubsidy = GetBlockSubsidy(nBlockHeight - 1, consensusParams, true);
     CAmount nPaymentsLimit = nSuperblockPartOfSubsidy * nSuperblockCycle;
 
-     if (nBlockHeight == 175200) {
+    if (nBlockHeight == 175200) {
         nPaymentsLimit = 214200 * COIN;
-    } else if (nBlockHeight == 321200) {
-        nPaymentsLimit = 170000 * COIN;
-    } else if (nBlockHeight == 467200) {
-        nPaymentsLimit = 138800 * COIN;
-    } else if (nBlockHeight == 613200) {
-        nPaymentsLimit = 109900 * COIN;
-    } else if (nBlockHeight == 759200) {
-        nPaymentsLimit = 86500 * COIN;
-    } else if (nBlockHeight == 905200) {
-        nPaymentsLimit = 66400 * COIN;
-    } else if (nBlockHeight == 1051200) {
-        nPaymentsLimit = 50800 * COIN;
-    } else if (nBlockHeight == 1197200) {
-        nPaymentsLimit = 39500 * COIN;
-    } else if (nBlockHeight == 1343200) {
-        nPaymentsLimit = 31700 * COIN;
+    } else if (nBlockHeight == 292000) {
+        nPaymentsLimit = 156200 * COIN;
+    } else if (nBlockHeight == 350400) {
+        nPaymentsLimit = 100480 * COIN;
+    } else if (nBlockHeight == 496400) {
+        nPaymentsLimit = 90800 * COIN;
+    } else if (nBlockHeight == 671600) {
+        nPaymentsLimit = 67120 * COIN;
+    } else if (nBlockHeight == 817600) {
+        nPaymentsLimit = 60680 * COIN;
+    } else if (nBlockHeight == 992800) {
+        nPaymentsLimit = 43720 * COIN;
+    } else if (nBlockHeight == 1168000) {
+        nPaymentsLimit = 32360 * COIN;
+    } else if (nBlockHeight == 1314000) {
+        nPaymentsLimit = 30920 * COIN;
     } else if (nBlockHeight == 1489200) {
-        nPaymentsLimit = 23900 * COIN;
+        nPaymentsLimit = 26680 * COIN;
     } else if (nBlockHeight == 1635200) {
-        nPaymentsLimit = 18420 * COIN;
-    } else if (nBlockHeight == 1781200) {
-        nPaymentsLimit = 15000 * COIN;
-    } else if (nBlockHeight == 1927200) {
-        nPaymentsLimit = 13240 * COIN;
-    } else if (nBlockHeight == 2044000) {
-        nPaymentsLimit = 13140 * COIN;
-    } else if (nBlockHeight == 2190000) {
-        nPaymentsLimit = 11580 * COIN;
-    } else if (nBlockHeight == 2336000) {
-        nPaymentsLimit = 10020 * COIN;
-    } else if (nBlockHeight == 2482000) {
-        nPaymentsLimit = 8460 * COIN;
-    } else if (nBlockHeight == 2628000) {
-        nPaymentsLimit = 6900 * COIN;
+        nPaymentsLimit = 24900 * COIN;
+    } else if (nBlockHeight == 1810400) {
+        nPaymentsLimit = 20780 * COIN;
+    } else if (nBlockHeight == 1956400) {
+        nPaymentsLimit = 20120 * COIN;
+    } else if (nBlockHeight == 2131600) {
+        nPaymentsLimit = 18000 * COIN;
+    } else if (nBlockHeight == 2277600) {
+        nPaymentsLimit = 17340 * COIN;
+    } else if (nBlockHeight == 2452800) {
+        nPaymentsLimit = 15220 * COIN;
+    } else if (nBlockHeight == 2598800) {
+        nPaymentsLimit = 14560 * COIN;
     } else if (nBlockHeight == 2774000) {
-        nPaymentsLimit = 5340 * COIN;
-    } else if (nBlockHeight == 2920000) {
-        nPaymentsLimit = 3780 * COIN;
-    } else if (nBlockHeight == 3066000) {
-        nPaymentsLimit = 2220 * COIN;
-    } else if (nBlockHeight == 3212000) {
-        nPaymentsLimit = 1060 * COIN;
-    } else if (nBlockHeight == 3358000) {
-        nPaymentsLimit = 505 * COIN;
-    } else if (nBlockHeight == 3650000) {
-        nPaymentsLimit = 340 * COIN;
+        nPaymentsLimit = 12440 * COIN;
+    } else if (nBlockHeight == 2949200) {
+        nPaymentsLimit = 10320 * COIN;
+    } else if (nBlockHeight == 3095200) {
+        nPaymentsLimit = 9660 * COIN;
+    } else if (nBlockHeight == 3416400) {
+        nPaymentsLimit = 6880 * COIN;
+    } else if (nBlockHeight == 3591600) {
+        nPaymentsLimit = 4760 * COIN;
+    } else if (nBlockHeight == 3737600) {
+        nPaymentsLimit = 4100 * COIN;
+    } else if (nBlockHeight == 3912800) {
+        nPaymentsLimit = 1980 * COIN;
+    } else if (nBlockHeight == 4204800) {
+        nPaymentsLimit = 1234 * COIN;
+    } else if (nBlockHeight == 4526000) {
+        nPaymentsLimit = 956 * COIN;
+    } else if (nBlockHeight == 4701200) {
+        nPaymentsLimit = 744 * COIN;
+    } else if (nBlockHeight == 4847200) {
+        nPaymentsLimit = 678 * COIN;
+    } else if (nBlockHeight == 5022400) {
+        nPaymentsLimit = 466 * COIN;
+    } else if (nBlockHeight == 5168400) {
+        nPaymentsLimit = 400 * COIN;
+    } else if (nBlockHeight == 5343600) {
+        nPaymentsLimit = 188 * COIN;
     }
 
     LogPrint(BCLog::GOBJECT, "CSuperblock::GetPaymentsLimit -- Valid superblock height %d, payments max %lld\n", nBlockHeight, nPaymentsLimit);

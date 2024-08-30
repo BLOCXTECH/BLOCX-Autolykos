@@ -19,12 +19,12 @@ public:
     Digest32 transactionsRoot;
     Timestamp timestamp;
     uint32_t nBits;
-    int height;
+    uint32_t height;
     Digest32 extensionRoot;
     std::array<uint8_t, 3> votes;
 
     HeaderWithoutPow(Version version, const ModifierId& parentId, const Digest32& ADProofsRoot, const ADDigest& stateRoot, const Digest32& transactionsRoot,
-                     Timestamp timestamp, uint32_t nBits, int height, const Digest32& extensionRoot, const std::array<uint8_t, 3>& votes)
+                     Timestamp timestamp, uint32_t nBits, uint32_t height, const Digest32& extensionRoot, const std::array<uint8_t, 3>& votes)
                     : version(version), parentId(parentId), ADProofsRoot(ADProofsRoot), stateRoot(stateRoot), transactionsRoot(transactionsRoot), 
                       timestamp(timestamp), nBits(nBits), height(height), extensionRoot(extensionRoot), votes(votes) {}
     

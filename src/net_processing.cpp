@@ -146,7 +146,7 @@ static const unsigned int AVG_ADDRESS_BROADCAST_INTERVAL = 30;
 static const unsigned int INVENTORY_BROADCAST_INTERVAL = 5;
 /** Maximum number of inventory items to send per transmission.
  *  Limits the impact of low-fee transaction floods.
- *  We have 4 times smaller block times in BLOCX_TESTNET, so we need to push 4 times more invs per 1MB. */
+ *  We have 4 times smaller block times in BLOCX, so we need to push 4 times more invs per 1MB. */
 static constexpr unsigned int INVENTORY_BROADCAST_MAX_PER_1MB_BLOCK = 4 * 7 * INVENTORY_BROADCAST_INTERVAL;
 /** Maximum number of compact filters that may be requested with one getcfilters. See BIP 157. */
 static constexpr uint32_t MAX_GETCFILTERS_SIZE = 1000;
@@ -1543,7 +1543,7 @@ bool static AlreadyHave(const CInv& inv, const CTxMemPool& mempool, const LLMQCo
         return LookupBlockIndex(inv.hash) != nullptr;
 
     /*
-        BLOCX_TESTNET Related Inventory Messages
+        BLOCX Related Inventory Messages
 
         --
 
@@ -2040,7 +2040,8 @@ static void ProcessHeadersMessage(CNode& pfrom, CConnman& connman, ChainstateMan
         //   nUnconnectingHeaders gets reset back to 0.
         if (!LookupBlockIndex(headers[0].hashPrevBlock) && nCount < MAX_BLOCKS_TO_ANNOUNCE) {
             nodestate->nUnconnectingHeaders++;
-            std::string msg_type = (pfrom.nServices & NODE_HEADERS_COMPRESSED) ? NetMsgType::GETHEADERS2 : NetMsgType::GETHEADERS;
+            // std::string msg_type = (pfrom.nServices & NODE_HEADERS_COMPRESSED) ? NetMsgType::GETHEADERS2 : NetMsgType::GETHEADERS;
+            std::string msg_type = NetMsgType::GETHEADERS;
             connman.PushMessage(&pfrom, msgMaker.Make(msg_type, ::ChainActive().GetLocator(pindexBestHeader), uint256()));
             LogPrint(BCLog::NET, "received header %s: missing prev block %s, sending %s (%d) to end (peer=%d, nUnconnectingHeaders=%d)\n",
         // - 
@@ -2110,7 +2111,8 @@ static void ProcessHeadersMessage(CNode& pfrom, CConnman& connman, ChainstateMan
             // Headers message had its maximum size; the peer may have more headers.
             // TODO: optimize: if pindexLast is an ancestor of ::ChainActive().Tip or pindexBestHeader, continue
             // from there instead.
-            std::string msg_type = (pfrom.nServices & NODE_HEADERS_COMPRESSED) ? NetMsgType::GETHEADERS2 : NetMsgType::GETHEADERS;
+            // std::string msg_type = (pfrom.nServices & NODE_HEADERS_COMPRESSED) ? NetMsgType::GETHEADERS2 : NetMsgType::GETHEADERS;
+            std::string msg_type = NetMsgType::GETHEADERS;
             LogPrint(BCLog::NET, "more %s (%d) to end to peer=%d (startheight:%d)\n", msg_type, pindexLast->nHeight, pfrom.GetId(), pfrom.nStartingHeight);
             connman.PushMessage(&pfrom, msgMaker.Make(msg_type, ::ChainActive().GetLocator(pindexLast), uint256()));
         }
@@ -3026,7 +3028,6 @@ void PeerLogicValidation::ProcessMessage(
 
                 // Download if this is a nice peer, or we have no nice peers and this one might do.
                 bool fFetch = state->fPreferredDownload || (nPreferredDownload == 0 && !pfrom.fOneShot);
-
                 // Only actively request headers from a single peer, unless we're close to end of initial download.
                 if ((nSyncStarted == 0 && fFetch) || pindexBestHeader->GetBlockTime() > GetAdjustedTime() - nMaxTipAge) {
                     int64_t blockTime = Params().GetConsensus().GetCurrentPowTargetSpacing(m_chainman.ActiveChain().Tip()->nHeight);
@@ -3039,7 +3040,8 @@ void PeerLogicValidation::ProcessMessage(
                     // fell back to inv we probably have a reorg which we should get the headers for first,
                     // we now only provide a getheaders response here. When we receive the headers, we will
                     // then ask for the blocks we need.
-                    std::string msg_type = (pfrom.nServices & NODE_HEADERS_COMPRESSED) ? NetMsgType::GETHEADERS2 : NetMsgType::GETHEADERS;
+                    // std::string msg_type = (pfrom.nServices & NODE_HEADERS_COMPRESSED) ? NetMsgType::GETHEADERS2 : NetMsgType::GETHEADERS;
+                    std::string msg_type = NetMsgType::GETHEADERS;
                     m_connman.PushMessage(&pfrom, msgMaker.Make(msg_type, ::ChainActive().GetLocator(pindexBestHeader), inv.hash));
                     LogPrint(BCLog::NET, "%s (%d) %s to peer=%d\n", msg_type, pindexBestHeader->nHeight, inv.hash.ToString(), pfrom.GetId());
                 }
@@ -3283,7 +3285,7 @@ void PeerLogicValidation::ProcessMessage(
         };
 
         LogPrint(BCLog::NET, "%s %d to %s from peer=%d\n", msg_type, (pindex ? pindex->nHeight : -1), hashStop.IsNull() ? "end" : hashStop.ToString(), pfrom.GetId());
-        if (msg_type == NetMsgType::GETHEADERS) {
+        if (msg_type == NetMsgType::GETHEADERS/* || msg_type == NetMsgType::GETHEADERS2*/) {
             // we must use CBlocks, as CBlockHeaders won't include the 0x00 nTx count at the end
             std::vector<CBlock> v_headers;
             send_headers(NetMsgType::HEADERS, v_headers, [](const auto block_pindex) { return block_pindex->GetBlockHeader(); });
@@ -3478,7 +3480,8 @@ void PeerLogicValidation::ProcessMessage(
         if (!LookupBlockIndex(cmpctblock.header.hashPrevBlock)) {
             // Doesn't connect (or is genesis), instead of DoSing in AcceptBlockHeader, request deeper headers
             if (!::ChainstateActive().IsInitialBlockDownload())
-                m_connman.PushMessage(&pfrom, msgMaker.Make((pfrom.nServices & NODE_HEADERS_COMPRESSED) ? NetMsgType::GETHEADERS2 : NetMsgType::GETHEADERS, ::ChainActive().GetLocator(pindexBestHeader), uint256()));
+                // m_connman.PushMessage(&pfrom, msgMaker.Make((pfrom.nServices & NODE_HEADERS_COMPRESSED) ? NetMsgType::GETHEADERS2 : NetMsgType::GETHEADERS, ::ChainActive().GetLocator(pindexBestHeader), uint256()));
+                m_connman.PushMessage(&pfrom, msgMaker.Make(NetMsgType::GETHEADERS, ::ChainActive().GetLocator(pindexBestHeader), uint256()));
             return;
         }
 
@@ -4320,7 +4323,8 @@ void PeerLogicValidation::ConsiderEviction(CNode& pto, int64_t time_in_seconds)
                 pto.fDisconnect = true;
             } else {
                 assert(state.m_chain_sync.m_work_header);
-                std::string msg_type = (pto.nServices & NODE_HEADERS_COMPRESSED) ? NetMsgType::GETHEADERS2 : NetMsgType::GETHEADERS;
+                // std::string msg_type = (pto.nServices & NODE_HEADERS_COMPRESSED) ? NetMsgType::GETHEADERS2 : NetMsgType::GETHEADERS;
+                std::string msg_type = NetMsgType::GETHEADERS;
                 LogPrint(BCLog::NET, "sending %s to outbound peer=%d to verify chain work (current best known block:%s, benchmark blockhash: %s)\n",
                         msg_type,
                         pto.GetId(),
@@ -4555,7 +4559,8 @@ bool PeerLogicValidation::SendMessages(CNode* pto)
                    got back an empty response.  */
                 if (pindexStart->pprev)
                     pindexStart = pindexStart->pprev;
-                std::string msg_type = (pto->nServices & NODE_HEADERS_COMPRESSED) ? NetMsgType::GETHEADERS2 : NetMsgType::GETHEADERS;
+                // std::string msg_type = (pto->nServices & NODE_HEADERS_COMPRESSED) ? NetMsgType::GETHEADERS2 : NetMsgType::GETHEADERS;
+                std::string msg_type = NetMsgType::GETHEADERS;
                 LogPrint(BCLog::NET, "initial %s (%d) to peer=%d (startheight:%d)\n", msg_type, pindexStart->nHeight, pto->GetId(), pto->nStartingHeight);
                 m_connman.PushMessage(pto, msgMaker.Make(msg_type, ::ChainActive().GetLocator(pindexStart), uint256()));
             }
@@ -5004,7 +5009,7 @@ bool PeerLogicValidation::SendMessages(CNode* pto)
             state.m_object_download.m_check_expiry_timer = current_time + GetObjectExpiryInterval(MSG_TX)/2 + GetRandMicros(GetObjectExpiryInterval(MSG_TX));
         }
 
-        // BLOCX_TESTNET this code also handles non-TXs (BLOCX_TESTNET specific messages)
+        // BLOCX this code also handles non-TXs (BLOCX specific messages)
         auto& object_process_time = state.m_object_download.m_object_process_time;
         while (!object_process_time.empty() && object_process_time.begin()->first <= current_time && state.m_object_download.m_object_in_flight.size() < MAX_PEER_OBJECT_IN_FLIGHT) {
             const CInv inv = object_process_time.begin()->second;

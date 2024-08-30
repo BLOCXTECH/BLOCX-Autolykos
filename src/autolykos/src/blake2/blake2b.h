@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <vector>
+#include <string>
 
 #define BLAKE2B_OUTBYTES 32
 // state context
@@ -38,5 +39,6 @@ int blake2b(void *out, size_t outlen,   // return buffer for digest
     const void *in, size_t inlen);      // data to be hashed
 
 std::vector<uint8_t> Blake2b256(const std::vector<uint8_t>& data);
+std::vector<uint8_t> computeBlake2bHash(const std::string& input);
 
 #endif

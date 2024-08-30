@@ -119,123 +119,6 @@ static UniValue getnetworkhashps(const JSONRPCRequest& request)
     return GetNetworkHashPS(!request.params[0].isNull() ? request.params[0].get_int() : 120, !request.params[1].isNull() ? request.params[1].get_int() : -1);
 }
 
-void printInt(const std::vector<uint8_t>& hash)
-{
-    for (size_t i = 0; i < hash.size(); ++i) {
-        int8_t signedByte = static_cast<int8_t>(hash[i]);
-        std::cout << static_cast<int>(signedByte);
-        LogPrintf("%d", static_cast<int>(signedByte));
-        if (i != hash.size() - 1) {
-            std::cout << ", ";
-            LogPrintf(", ");
-        }
-    }
-    std::cout << std::endl;
-}
-
-template <typename T>
-void printBytesAsHex(const T& data) {
-    for (auto byte : data) {
-        std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
-    }
-    std::cout << std::dec; // Reset to decimal formatting
-}
-
-void printSecp256k1PubKey(const secp256k1_pubkey& pubkey) {
-    secp256k1_context* ctx = secp256k1_context_create(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);
-
-    unsigned char serialized_pubkey[65];
-    size_t serialized_pubkey_length = sizeof(serialized_pubkey);
-    if (secp256k1_ec_pubkey_serialize(ctx, serialized_pubkey, &serialized_pubkey_length, &pubkey, SECP256K1_EC_UNCOMPRESSED) == 1) {
-        std::cout << "secp256k1_pubkey: ";
-        for (size_t i = 0; i < serialized_pubkey_length; ++i) {
-            std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(serialized_pubkey[i]);
-        }
-        std::cout << std::dec << std::endl;
-    } else {
-        std::cerr << "Failed to serialize secp256k1_pubkey" << std::endl;
-    }
-
-    secp256k1_context_destroy(ctx);
-}
-
-void printVectorUint8(const std::vector<uint8_t>& vec) {
-    std::cout << "std::vector<uint8_t>: ";
-    printBytesAsHex(vec);
-    std::cout << std::endl;
-}
-
-std::string vectorToHex(const std::vector<uint8_t>& vec) {
-    std::ostringstream oss;
-    for (auto byte : vec) {
-        oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
-    }
-    return oss.str();
-}
-
-void printHeaderWithoutPOW(const HeaderWithoutPow& header)
-{
-    std::cout << "Version: " << static_cast<int>(header.version) << std::endl;
-    LogPrintf("Version: %d\n", static_cast<int>(header.version));
-
-    std::cout << "Parent ID: ";
-    printInt(header.parentId);
-    // LogPrintf("Parent ID: %d\n", header.parentId);
-
-    std::cout << "ADProofsRoot: ";
-    LogPrintf("ADProofsRoot: ");
-    for (const auto& byte : header.ADProofsRoot) {
-        std::cout << static_cast<int>(static_cast<int8_t>(byte)) << " ";
-        LogPrintf("%s ", static_cast<int>(static_cast<int8_t>(byte)));
-    }
-    LogPrintf("\n");
-    std::cout << std::endl;
-
-    std::cout << "StateRoot: ";
-    LogPrintf("StateRoot: ");
-    for (const auto& byte : header.stateRoot) {
-        std::cout << static_cast<int>(static_cast<int8_t>(byte)) << " ";
-        LogPrintf("%s ", static_cast<int>(static_cast<int8_t>(byte)));
-    }
-    LogPrintf("\n");
-    std::cout << std::endl;
-
-    std::cout << "TransactionsRoot: ";
-    LogPrintf("TransactionsRoot: ");
-    for (const auto& byte : header.transactionsRoot) {
-        std::cout << static_cast<int>(static_cast<int8_t>(byte)) << " ";
-        LogPrintf("%s ", static_cast<int>(static_cast<int8_t>(byte)));
-    }
-    LogPrintf("\n");
-    std::cout << std::endl;
-
-    std::cout << "Timestamp: " << header.timestamp << std::endl;
-    LogPrintf("Timestamp: %d\n", header.timestamp);
-    std::cout << "nBits: " << header.nBits << std::endl;
-    LogPrintf("nBits: %d\n", header.nBits);
-    std::cout << "Height: " << header.height << std::endl;
-    LogPrintf("Height: %d\n", header.height);
-
-    std::cout << "ExtensionRoot: ";
-    LogPrintf("ExtensionRoot: ");
-    for (const auto& byte : header.extensionRoot) {
-        std::cout << static_cast<int>(static_cast<int8_t>(byte)) << " ";
-        LogPrintf("%s ", static_cast<int>(static_cast<int8_t>(byte)));
-    }
-    LogPrintf("\n");
-    std::cout << std::endl;
-}
-
-// void printHeader(const Header& header) {
-    
-//     AutolykosPowScheme powScheme(32, 26);
-//     HeaderWithoutPow h = powScheme.toHeaderWithoutPow(header);
-//     printHeaderWithoutPOW(h);
-//     printSecp256k1PubKey(header.powSolution.pk);
-//     printSecp256k1PubKey(header.powSolution.w);
-//     printVectorUint8(header.powSolution.n);
-// }
-
 uint32_t vectorToUint32(const Header& header) {
     if (header.powSolution.n.size() < 8) {
         throw std::invalid_argument("Vector size must be at least 8 bytes to convert to uint32_t.");
@@ -258,7 +141,7 @@ HeaderWithoutPow ConvertBlockToHeader(CBlock* block) {
 
     Timestamp timestamp = block->nTime;
     uint32_t nBits = block->nBits;
-    int8_t a_Height = block->aHeight;
+    uint32_t a_Height = block->aHeight;
 
     int k = 32;
     int n = 26;
@@ -293,21 +176,16 @@ static bool GenerateBlock(ChainstateManager& chainman, CBlock& block, uint64_t& 
     CChainParams chainparams(Params());
 
     const CBlockHeader& b_h = block.GetBlockHeader();
-    int initial = 1;
-
-    int height = ::ChainActive().Height();
+    int height = b_h.aHeight;
 
     if (height >= chainparams.GetConsensus().AutolykosForkHeight) {
         int k = 32;
         int n = 26;
         AutolykosPowScheme powScheme(k, n);
 
-        uint64_t timestamp = block.nTime;
-
-        if (height <= chainparams.GetConsensus().AutolykosForkHeight + 5) {
+        if (height == chainparams.GetConsensus().AutolykosForkHeight + 1) {
             auto nB = encodeCompactBits(0xa);
             block.nBits = nB;
-            std::cout << "reached" << std::endl;
         } else {
             auto nB = encodeCompactBits(block.nBits);
             block.nBits = nB;
@@ -333,15 +211,13 @@ static bool GenerateBlock(ChainstateManager& chainman, CBlock& block, uint64_t& 
         long maxNonce = 10;
 
         HeaderWithoutPow h = ConvertBlockToHeader(&block);
-        printHeaderWithoutPOW(h);
 
         auto msg = powScheme.msgByHeader(h);
-        std::string hexString = vectorToHex(msg);
+        std::string hexString = powScheme.vectorToHex(msg);
         std::cout << "GenerateBlock msg " << hexString << std::endl;
-        std::cout << "NBITS : " << h.nBits << std::endl;
         
 
-        while (max_tries > 0) {
+        while (max_tries > 0  && !ShutdownRequested()) {
             auto head = powScheme.prove(
                 noHeader,
                 parentId,
@@ -357,24 +233,21 @@ static bool GenerateBlock(ChainstateManager& chainman, CBlock& block, uint64_t& 
                 0x02eeec374f4e660e117fccbfec79e6fe5cdf44ac508fa228bfc654d2973f9bdc9a,
                 minNonce, maxNonce);
 
-            // LogPrintf("\n\n\n INSIDE MINING.CPP\n");
-            // printHeader(*head);
+            std::cout << "calculated  : " << GetNextWorkRequired(::ChainActive().Tip(), &block, Params().GetConsensus()) << std::endl;
+            std::cout << "block nbits : " << decodeCompactBits(block.nBits) << std::endl;
             if (head) {
                 bool isValidHeader = powScheme.validate(*head);
 
                 if (isValidHeader) {
                     ErgoNodeViewModifier HeaderToBytes;
-                    auto hash_Header = HeaderToBytes.serializedId(*head);
-                    // uint256 headers = uint256(hash_Header);
-    
+
                     block.nNewNonce = vectorToUint32(*head);
                     std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(block);
-                    // std::cout << block.nBits << "--------- " << encodeCompactBits(block.nBits) << std::endl;
                     if (!chainman.ProcessNewBlock(chainparams, shared_pblock, true, nullptr)) {
                         throw JSONRPCError(RPC_INTERNAL_ERROR, "ProcessNewBlock, block not accepted");
                     }
-                    // block_hash = headers;
-                    block_hash = uint256(hash_Header);
+
+                    block_hash = block.GetHash();
                     return true;
                 }
             } 
@@ -704,94 +577,6 @@ static UniValue getmininginfo(const JSONRPCRequest& request)
     return obj;
 }
 
-static UniValue getcandidate(const JSONRPCRequest& request)
-{
-    UniValue blockHashes(UniValue::VARR);
-    std::string error;
-    CTxDestination destination = DecodeDestination("BFsfytfY5V9RtGZioxwewi97n1C3tVz3d3");
-    if (!IsValidDestination(destination)) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error: Invalid address");
-    }
-    CScript coinbase_script = GetScriptForDestination(destination);
-
-    const CTxMemPool& mempool = EnsureMemPool(request.context);
-    const NodeContext& node_context = EnsureNodeContext(request.context);
-    LLMQContext& llmq_ctx = EnsureLLMQContext(request.context);
-
-    std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(*sporkManager, *governance, *llmq_ctx.quorum_block_processor, *llmq_ctx.clhandler, *llmq_ctx.isman, *node_context.evodb, mempool, Params()).CreateNewBlock(coinbase_script));
-    if (!pblocktemplate.get())
-            throw JSONRPCError(RPC_INTERNAL_ERROR, "Couldn't create new block");
-    CBlock *pblock = &pblocktemplate->block;
-
-    unsigned int nExtraNonce = 0;
-    {
-        LOCK(cs_main);
-        IncrementExtraNonce(pblock, ::ChainActive().Tip(), nExtraNonce);
-    }
-
-    std::string merkleRoot = pblock->hashMerkleRoot.ToString();
-    UniValue obj(UniValue::VOBJ);
-
-    CChainParams chainparams(Params());
-    
-    auto b = encodeCompactBits(pblock->nBits);
-    obj.pushKV("b", b);
-    pblock->nBits = b;
-
-    int k = 32;
-    int n = 26;
-    AutolykosPowScheme powScheme(k, n);
-
-    HeaderWithoutPow h = ConvertBlockToHeader(pblock);
-    //h.height = 9999999;
-
-    printHeaderWithoutPOW(h);
-
-    auto msg = powScheme.msgByHeader(h);
-    
-    std::string hexString = vectorToHex(msg);
-    std::cout << "candidate msg : " << hexString << std::endl;
-    LogPrintf("candidate msg : %s\n", hexString);
-
-    obj.pushKV("msg", hexString);
-    obj.pushKV("h", (int)pblock->aHeight);
-    obj.pushKV("pk", "0x02eeec374f4e660e117fccbfec79e6fe5cdf44ac508fa228bfc654d2973f9bdc9a");
-
-    return obj;
-}
-
-static UniValue submitsolution(const JSONRPCRequest& request)
-{
-    UniValue sendTo = request.params[1].get_obj();
-
-    std::vector<std::string> keys = sendTo.getKeys();
-    for (const std::string& name_ : keys) {
-        CAmount nAmount = AmountFromValue(sendTo[name_]);        
-    }
-
-    std::shared_ptr<CBlock> blockptr = std::make_shared<CBlock>();
-    CBlock& block = *blockptr;
-    if (!DecodeHexBlk(block, request.params[0].get_str())) {
-        throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Block decode failed");
-    }
-
-    AutolykosPowScheme powScheme(32, 26);
-
-    std::vector<uint8_t> nonce = powScheme.uint32ToBytes(block.nNewNonce);
-
-    AutolykosSolution powSolution = {
-        groupElemFromBytes({0x02, 0xf5, 0x92, 0x4b, 0x14, 0x32, 0x5a, 0x1f, 0xfa, 0x8f, 0x95, 0xf8, 0xc0, 0x00, 0x06, 0x11, 0x87, 0x28, 0xce, 0x37, 0x85, 0xa6, 0x48, 0xe8, 0xb2, 0x69, 0x82, 0x0a, 0x3d, 0x3b, 0xdf, 0xd4, 0x0d}),
-        groupElemFromBytes({0x02, 0xf5, 0x92, 0x4b, 0x14, 0x32, 0x5a, 0x1f, 0xfa, 0x8f, 0x95, 0xf8, 0xc0, 0x00, 0x06, 0x11, 0x87, 0x28, 0xce, 0x37, 0x85, 0xa6, 0x48, 0xe8, 0xb2, 0x69, 0x82, 0x0a, 0x3d, 0x3b, 0xdf, 0xd4, 0x0d}),
-        nonce,
-        boost::multiprecision::cpp_int("0")};
-
-    HeaderWithoutPow hwp = ConvertBlockToHeader(&block);
-    Header h = hwp.toHeader(powSolution);
-
-    bool valid = powScheme.validate(h);
-    return valid;
-}
-
 // NOTE: Unlike wallet RPC (which use BTC values), mining RPCs follow GBT (BIP 22) in using satoshi amounts
 static UniValue prioritisetransaction(const JSONRPCRequest& request)
 {
@@ -1025,8 +810,8 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     if (!node.connman)
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
-    if (node.connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, PACKAGE_NAME " is not connected!");
+    // if (node.connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
+    //     throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, PACKAGE_NAME " is not connected!");
 
     // if (::ChainstateActive().IsInitialBlockDownload())
     //     throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, PACKAGE_NAME " is in initial sync and waiting for blocks...");
@@ -1217,7 +1002,15 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     result.pushKV("coinbaseaux", aux);
     result.pushKV("coinbasevalue", (int64_t)pblock->vtx[0]->GetValueOut());
     result.pushKV("longpollid", ::ChainActive().Tip()->GetBlockHash().GetHex() + ToString(nTransactionsUpdatedLast));
-    result.pushKV("target", hashTarget.GetHex());
+    if (pindexPrev->nHeight + 1 > consensusParams.AutolykosForkHeight) {
+        AutolykosPowScheme powScheme(32, 26);
+
+        std::stringstream ss;
+        ss << std::hex << powScheme.getB(encodeCompactBits(pblock->nBits));
+        std::string hexStr = ss.str();
+        result.pushKV("target", hexStr);
+    } else
+        result.pushKV("target", hashTarget.GetHex());
     result.pushKV("mintime", (int64_t)pindexPrev->GetMedianTimePast() + 1);
     result.pushKV("mutable", aMutable);
     result.pushKV("noncerange", "00000000ffffffff");
@@ -1587,8 +1380,6 @@ static const CRPCCommand commands[] =
   //  --------------------- ------------------------  -----------------------  ----------
     { "mining",             "getnetworkhashps",       &getnetworkhashps,       {"nblocks","height"} },
     { "mining",             "getmininginfo",          &getmininginfo,          {} },
-    { "mining",             "getcandidate",           &getcandidate,           {} },
-    { "mining",             "submitsolution",         &submitsolution,         {} },
     { "mining",             "prioritisetransaction",  &prioritisetransaction,  {"txid","fee_delta"} },
     { "mining",             "getblocktemplate",       &getblocktemplate,       {"template_request"} },
     { "mining",             "submitblock",            &submitblock,            {"hexdata","dummy"} },

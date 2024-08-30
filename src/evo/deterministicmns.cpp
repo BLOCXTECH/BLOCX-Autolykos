@@ -1443,7 +1443,7 @@ static bool CheckService(const ProTx& proTx, CValidationState& state)
         return state.Invalid(ValidationInvalidReason::TX_BAD_SPECIAL, false, REJECT_INVALID, "bad-protx-ipaddr-port");
     }
 
-    if (!proTx.addr.IsIPv4()) {
+    if (!proTx.addr.IsIPv4() && !proTx.addr.IsIPv6()) {
         return state.Invalid(ValidationInvalidReason::TX_BAD_SPECIAL, false, REJECT_INVALID, "bad-protx-ipaddr");
     }
 
